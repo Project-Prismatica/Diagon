@@ -28,7 +28,7 @@ class SessionManager():
 class dbmgr:
     def __init__(self):
         import sqlite3
-        DATABASE = 'odb'
+        DATABASE = 'odb.sqlite3'
         self.conn = sqlite3.connect(DATABASE, timeout=1)
         self.conn.execute('pragma foreign_keys = on')
         self.conn.commit()
