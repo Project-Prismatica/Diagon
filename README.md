@@ -3,4 +3,4 @@ The Diagon Attack Framework is a Prismatica application containing the Ravenclaw
 
 The Gryffindor RAT was released at Derbycon 2018.
 
-[Video](www.youtube.com/watch?v=wUs0c72fiLc)
+[](https://www.youtube.com/watch?v=wUs0c72fiLc)
