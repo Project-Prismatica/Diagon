@@ -1,0 +1,22 @@
+.container {
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  text-align: center;
+}
+
+.container h2 {
+  font-size: 5rem;
+}
+
+.container a {
+  font-size: 1.4rem;
+}
+.terminal-base {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  min-height: 630px;
+  max-height: 100vh;
+  text-align: initial;
+}
