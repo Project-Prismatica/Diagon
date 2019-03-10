@@ -1,0 +1,7 @@
+{
+  "buildcmds": [
+    {
+      "cmd": "python C:\\Projects\\Prismatica\\Diagon\\diagon.py"
+    }
+  ]
+}

