@@ -9,8 +9,13 @@ import SessionTracker from '../utils/SessionTracker';
 
 import MenuBar from './MenuBar';
 import WindowControls from './WindowControls';
+import SessionTable from './SessionTable';
 
 const remote = require('electron').remote;
+
+import { getSettings } from '../renderers/settings-control';
+
+
 
 type Props = {
   addSession: () => void,
@@ -23,11 +28,10 @@ export default class PrismaticInterpreter extends Component<Props> {
   constructor(props) {
     super(props);
 
-
-    //showMsg = 'Hello World'
-
     this.state = {
        hideCompleted: false,
+       sessionTable: false,
+       settings: getSettings(),
        agentid: '',
        task: '',
        cmdRet: '',
@@ -36,10 +40,11 @@ export default class PrismaticInterpreter extends Component<Props> {
        session: '',
        tabs: []
     };
+    this.toggleTableView = this.toggleTableView.bind(this)
   }
   componentDidMount() {
     this.interval = setInterval(() => {
-      fetch('http://192.168.86.240:29001/api/c2', {
+      fetch('http://' + this.state.settings.emergenceServer + ':29001/api/c2', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -56,7 +61,7 @@ export default class PrismaticInterpreter extends Component<Props> {
       );
       //Data to Mount
       //Check for new sessions
-      fetch('http://192.168.86.240:29001/api/sessions', {
+      fetch('http://' + this.state.settings.emergenceServer + ':29001/api/sessions', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -98,6 +103,13 @@ export default class PrismaticInterpreter extends Component<Props> {
     clearInterval(this.interval);
   }
 
+  toggleTableView() {
+    if (this.state.sessionTable == true) {
+      this.setState({ sessionTable: false });
+    } else {
+      this.setState({ sessionTable: true });
+    }
+  }
   //Emergence Controls
   emCreateTask(task) {
     //Shell tasks and CMD passthrough
@@ -117,7 +129,7 @@ export default class PrismaticInterpreter extends Component<Props> {
     });
     //If no id user not interacting with session
 
-    fetch('http://192.168.86.240:29001/api/task', {
+    fetch('http://' + this.state.settings.emergenceServer + ':29001/api/task', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -188,7 +200,8 @@ export default class PrismaticInterpreter extends Component<Props> {
       <div className={styles.basecontainer}>
 
         <WindowControls />
-        <MenuBar />
+        <MenuBar toggleTableView={this.toggleTableView}/>
+        { this.state.sessionTable ? <SessionTable sessions={this.props.sessions} /> : null }
 
         <div className={styles.container} data-tid="container">
         <div className={styles.termcontainer}>

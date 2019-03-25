@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faIndustry, faTerminal, faBars, faBug, faKey, faServer, faRadiation } from '@fortawesome/free-solid-svg-icons';
+import { faIndustry, faTerminal, faBars, faBug, faKey, faServer, faRadiation, faHeadphones, faTable } from '@fortawesome/free-solid-svg-icons';
 import ReactTooltip from 'react-tooltip';
 import Modal from 'react-responsive-modal';
 
@@ -13,6 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 
 import Loader from 'react-loader-spinner';
 
@@ -24,13 +25,6 @@ const remote = require('electron').remote;
 
 import payloadGenerator from '../renderers/backdoor-factory';
 
-type Props = {
-  increment: () => void,
-  incrementIfOdd: () => void,
-  incrementAsync: () => void,
-  decrement: () => void,
-  counter: number
-};
 
 export default class MenuBar extends Component<Props> {
   props: Props;
@@ -42,12 +36,18 @@ export default class MenuBar extends Component<Props> {
       open: false,
       showSettings: false,
       payload: "Gryffindor",
+      listener: "",
       loader: false,
     };
+    this.toggleSettings = this.toggleSettings.bind(this)
   }
 
-  openSettings() {
-    this.setState({ showSettings: true });
+  toggleSettings() {
+    if (this.state.showSettings == true) {
+      this.setState({ showSettings: false });
+    } else {
+      this.setState({ showSettings: true });
+    }
   }
   openBackdoorFactory() {
     this.setState({ open: true });
@@ -83,9 +83,6 @@ export default class MenuBar extends Component<Props> {
     const payloads = [
       {
         name: "Gryffindor"
-      },
-      {
-        name: "Ravenclaw"
       }
     ]
     const Loading = () => {
@@ -109,6 +106,15 @@ export default class MenuBar extends Component<Props> {
         <ReactTooltip place="bottom" type="info" effect="solid"/>
         <div className={styles.menugroup}>
           <div className={styles.menuitem}>
+            <FontAwesomeIcon data-tip="Table View" onClick={this.props.toggleTableView} icon={faTable} />
+          </div>
+          <div className={styles.menuitem}>
+            <FontAwesomeIcon data-tip="Console View" onClick={this.props.toggleTableView} icon={faTerminal} />
+          </div>
+          <div className={styles.menuitem}>
+            <FontAwesomeIcon data-tip="Configure Listeners" icon={faHeadphones} />
+          </div>
+          <div className={styles.menuitem}>
             <FontAwesomeIcon data-tip="Generate Payloads" onClick={this.openBackdoorFactory.bind(this)} icon={faIndustry} />
           </div>
           <div className={styles.menuitem}>
@@ -118,16 +124,13 @@ export default class MenuBar extends Component<Props> {
             <FontAwesomeIcon data-tip="Generate Payloads" icon={faServer} />
           </div>
           <div className={styles.menuitem}>
-            <FontAwesomeIcon data-tip="Generate Payloads" icon={faKey} />
+            <FontAwesomeIcon data-tip="Credentials" icon={faKey} />
           </div>
           <div className={styles.menuitem}>
             <FontAwesomeIcon data-tip="Generate Payloads" icon={faBug} />
           </div>
-          <div className={styles.menuitem}>
-            <FontAwesomeIcon data-tip="Generate Payloads" icon={faTerminal} />
-          </div>
           <div className={styles.menusettings}>
-            <FontAwesomeIcon data-tip="Settings" icon={faBars} onClick={this.openSettings.bind(this)} />
+            <FontAwesomeIcon data-tip="Settings" icon={faBars} onClick={this.toggleSettings.bind(this)} />
           </div>
         </div>
         <Modal
@@ -140,37 +143,79 @@ export default class MenuBar extends Component<Props> {
         >
           <div className={styles.customModal}>
             <h2>Backdoor Factory</h2>
-            <FormControl>
-              <TextField
-                id="standard-select-currency"
-                select
-                label="Select"
-                value={this.state.payload}
-                className={styles.modalTextField}
-                onChange={this.handleChange('payload')}
-                SelectProps={{
-                  native: true,
-                  MenuProps: {
-                    className: styles.menuSpacing,
-                  },
-                }}
-                helperText="Please select your payload"
-                margin="normal"
-              >
-                {payloads.map(option => (
-                  <option key={option.name} value={option.name}>
-                    {option.name}
-                  </option>
-                ))}
-              </TextField>
+            <div style={{ padding: 20 }}>
+              <Grid container spacing={24}>
+                <FormControl>
+                  <Grid item xs={24}>
+                    <TextField
+                      id="standard-select-currency"
+                      select
+                      label="Payload"
+                      value={this.state.payload}
+                      className={styles.modalTextField}
+                      onChange={this.handleChange('payload')}
+                      SelectProps={{
+                        native: true,
+                        MenuProps: {
+                          className: styles.menuSpacing,
+                        },
+                      }}
+                      helperText="Please select your payload"
+                      margin="normal"
+                    >
+                      {payloads.map(option => (
+                        <option key={option.name} value={option.name}>
+                          {option.name}
+                        </option>
+                      ))}
+                    </TextField>
+                  </Grid>
+                </FormControl>
+              </Grid>
+              <br />
+              <br />
+              <Grid container spacing={24}>
+                <FormControl className="boxpadding">
+                  <Grid item xs={10}>
+                    <InputLabel htmlFor="listener">Listener</InputLabel>
+                    <Input
+                      id="listener"
+                      name="listener"
+                      defaultValue={this.state.listener}
+                      onChange={this.handleChange}
+                      inputProps={{
+                        'aria-label': 'Description',
+                      }}
+                    />
+                  </Grid>
+                </FormControl>
+                <FormControl>
+                  <Grid item xs={10}>
+                    <InputLabel htmlFor="c2Server">C2 Profile</InputLabel>
+                    <Input
+                      id="c2Server"
+                      name="c2"
+                      defaultValue="coming soon"
+                      onChange={this.handleChange}
+                      inputProps={{
+                        'aria-label': 'Description',
+                      }}
+                    />
+                  </Grid>
+                </FormControl>
+              </Grid>
+              <br />
+              <br />
+            </div>
 
-              <Button variant="contained" color= "primary" component="span" onClick={this.generatePayload.bind(this)}>
-                Generate
-              </Button>
-            </FormControl>
+            <Button variant="contained" color= "primary" component="span" onClick={this.generatePayload.bind(this)}>
+              Generate
+            </Button>
+
+
           </div>
         </Modal>
-        {this.state.showSettings ? <Settings /> : null }
+        {this.state.showSettings ? <Settings toggleSettings={this.toggleSettings} /> : null }
       </div>
     );
   }

@@ -62,11 +62,11 @@
   color: black;
 }
 .customModalContainer {
-  width: 500px;
+  width: 650px;
   color: black;
 }
 .menuSpacing {
-  width: 200px;
+  width: 500px;
 }
 .modalTextField {
   margin-top: 20px;
@@ -141,4 +141,10 @@
 .windowMax:hover svg path,
 .windowMin:hover svg rect {
   fill: #222;
+}
+.settingsmodal {
+  min-width: 600px;
+}
+.boxpadding {
+  margin-right: 10px;
 }
