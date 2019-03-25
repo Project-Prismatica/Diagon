@@ -13,6 +13,9 @@
 import { app, BrowserWindow } from 'electron';
 import MenuBuilder from './menu';
 
+const nodegit = require('nodegit')
+global.nodegit = nodegit
+
 let mainWindow = null;
 
 if (process.env.NODE_ENV === 'production') {

