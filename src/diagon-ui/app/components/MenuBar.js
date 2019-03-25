@@ -58,7 +58,13 @@ export default class MenuBar extends Component<Props> {
   generatePayload() {
     this.closeBackdoorFactory();
     this.showLoader();
-    payloadGenerator(this.state.payload);
+
+    var settings = {
+      "name": "Gryffindor",
+      "listener": this.state.listener
+    }
+
+    payloadGenerator(settings);
   }
   showLoader() {
     this.setState({ loader: true });
@@ -182,7 +188,7 @@ export default class MenuBar extends Component<Props> {
                       id="listener"
                       name="listener"
                       defaultValue={this.state.listener}
-                      onChange={this.handleChange}
+                      onChange={this.handleChange('listener')}
                       inputProps={{
                         'aria-label': 'Description',
                       }}

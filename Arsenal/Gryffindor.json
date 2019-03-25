@@ -1,7 +1,7 @@
 {
   "buildcmds": [
     {
-      "cmd": ["python", "diagon.py"]
+      "cmd": ["python", "path", "diagon.py"]
     }
   ]
 }

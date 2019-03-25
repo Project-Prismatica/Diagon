@@ -35,16 +35,26 @@ export default function payloadGenerator(payload) {
     }
 
   //Get payload build conf
-  fs.readFile('C:\\Projects\\Prismatica\\Diagon\\Arsenal\\' + payload + '.json', 'utf8', function(err, contents) {
-
-
+  fs.readFile(path.join(diagondir, 'Arsenal', 'gryffindor.json'), 'utf8', function(err, contents) {
   //Exec all build commands
   Object.entries(JSON.parse(contents).buildcmds).forEach(entry => {
     let key = entry[0];
     let value = entry[1];
-    console.log(value.cmd)
+    var command = ""
+    for (var i = 0; i < value.cmd.length; i++) {
+      if (value.cmd[i] == "path") {
+        i++
+        var filepath = path.join(diagondir, value.cmd[i])
+        command = command + ' "' + filepath + '"'
+      } else if (i == 0) {
+        command = value.cmd[i]
+      } else {
+        command = command + " " + value.cmd[i]
+      }
+    }
+    command = command + " " + payload.listener
 
-    exec(value.cmd, (err, stdout, stderr) => {
+    exec(command, (err, stdout, stderr) => {
       if (err) {
         // node couldn't execute the command
         return;
