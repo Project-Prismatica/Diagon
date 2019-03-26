@@ -1,0 +1,26 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+body {
+  position: relative;
+  height: 100vh;
+  background-color: black;
+  font-family: Arial, Helvetica, Helvetica Neue, serif;
+  overflow-y: hidden;
+}
+.dragbar {
+  position: fixed;
+  top: 3px;
+  color: #fff;
+  text-align: center;
+  top: 0px;
+  padding-top: 10px;
+  min-height: 30px;
+  font-size: 12px;
+  width: 100%;
+  background-color: #322f2f;
+  -webkit-app-region: drag;
+}

@@ -1,0 +1,18 @@
+{
+  "name": "prismatica-diagion-ui",
+  "productName": "Diagon",
+  "version": "0.1.0",
+  "description": "The Diagon Attack Framework is a Prismatica application containing the Ravenclaw, Gryffindor, and Slytherin remote access tools (RATs).",
+  "main": "./main.prod.js",
+  "author": {
+    "name": "Matthew Toussain",
+    "email": "matt@prismatica.io",
+    "url": "https://prismatica.io"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r babel-register ../internals/scripts/ElectronRebuild.js",
+    "postinstall": "yarn electron-rebuild"
+  },
+  "license": "MIT",
+  "dependencies": {}
+}

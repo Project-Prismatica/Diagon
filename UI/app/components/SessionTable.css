@@ -1,0 +1,11 @@
+.sessioncontainer {
+  position: relative;
+  top: 97px;
+  height: 100vh;
+  background-color: #333;
+  width: 100vw;
+  z-index: 2012;
+}
+.osfont {
+  font-size: 32px;
+}

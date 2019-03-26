@@ -1,0 +1,150 @@
+.container {
+  position: absolute;
+  top: 37px;
+  text-align: center;
+}
+
+.container h2 {
+  font-size: 5rem;
+}
+
+.container a {
+  font-size: 1.4rem;
+}
+.terminal-base {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  min-height: 630px;
+  max-height: 100vh;
+  text-align: initial;
+}
+.menucontainer {
+  position: absolute;
+  top: 22px;
+  height: 45px;
+  background-color: #222;
+  width: 100vw;
+  z-index: 2012;
+}
+.menuitem {
+  position: relative;
+  float: left;
+  color: #fff;
+  cursor: pointer;
+  margin-left: 20px;
+  margin-top: 12px;
+  font-size: 20px;
+}
+.menusettings {
+  position: relative;
+  float: right;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 20px;
+  margin-top: 12px;
+  font-size: 20px;
+}
+.menuitem:hover {
+  color: green;
+}
+.menugroup {
+  margin-left: 0px;
+}
+.termcontainer {
+  top: -45px;
+}
+.basecontainer {
+  position: absolute;
+  left: -10px;
+}
+.customModal {
+  color: black;
+}
+.customModalContainer {
+  width: 650px;
+  color: black;
+}
+.menuSpacing {
+  width: 500px;
+}
+.modalTextField {
+  margin-top: 20px;
+}
+.loader {
+  position: absolute;
+  top: 300px;
+  left: 50%;
+}
+.terminalText {
+  color: green;
+  font-family: monospace;
+}
+.windowcontrols {
+  -webkit-app-region: no-drag;
+  position: fixed;
+  right: 0px;
+  margin-right: 2px;
+  text-align: left;
+  top: 0;
+}
+.windowMax,
+.windowMin,
+.windowClose {
+  text-align: left;
+  float: right;
+  width: 45px;
+  height: 31px;
+  margin: 1px 1px 0 0;
+  text-align: center;
+  line-height: 29px;
+
+  -webkit-transition: background-color 0.2s;
+  -moz-transition: background-color 0.2s;
+  -ms-transition: background-color 0.2s;
+  -o-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+}
+
+.windowClose svg,
+.windowMax svg,
+.windowMin svg {
+  width: 10px;
+  height: 10px;
+  shape-rendering: crispEdges;
+  fill: rgba(255, 255, 255, 1);
+}
+.windowClose svg polygon,
+.windowMax svg polygon,
+.windowMin svg polygon {
+  fill: rgba(255, 255, 255, 1);
+  -webkit-transition: fill 0.2s;
+  -moz-transition: fill 0.2s;
+  -ms-transition: fill 0.2s;
+  -o-transition: fill 0.2s;
+  transition: fill 0.2s;
+}
+.windowClose svg polygon {
+  -webkit-transition: fill 0.2s;
+  -moz-transition: fill 0.2s;
+  -ms-transition: fill 0.2s;
+  -o-transition: fill 0.2s;
+  transition: fill 0.2s;
+}
+.windowClose:hover,
+.windowMax:hover,
+.windowMin:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.windowClose:hover svg polygon,
+.windowMax:hover svg path,
+.windowMin:hover svg rect {
+  fill: #222;
+}
+.settingsmodal {
+  min-width: 600px;
+}
+.boxpadding {
+  margin-right: 10px;
+}
