@@ -16,17 +16,15 @@ print "Saving payload to engagement directory"
 from os.path import expanduser
 home = expanduser("~")
 
-print
-
 prismdir = os.path.join(home, ".prismatica")
-payload = os.path.join(prismdir, "Diagon", "gryffindor.js")
+payload = os.path.join(prismdir, "gryffindor.js")
 template = os.path.join(prismdir, "Diagon", "Arsenal", "templates", "gryffindor.js")
 
 
 f = open(template, "r")
 tmp = f.read()
 w = open(payload, "w+")
-w.write("var LHOST = " + LHOST + "\r\n")
+w.write("var LHOST = '" + LHOST + "';\n")
 w.close()
 w = open(payload, "a")
 w.write(tmp)
