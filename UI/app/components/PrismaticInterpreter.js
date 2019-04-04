@@ -97,7 +97,7 @@ export default class PrismaticInterpreter extends Component<Props> {
           }
         });
       }
-    }, 2000);
+    }, 1000);
   }
   componentWillUnmount() {
     clearInterval(this.interval);
@@ -145,7 +145,7 @@ export default class PrismaticInterpreter extends Component<Props> {
 
   emTaskResponse() {
     try {
-      if (this.state.oldCmdRet.retval != this.state.cmdRet.retval) {
+      if (this.state.oldCmdRet._id != this.state.cmdRet._id) {
         console.log(atob(this.state.cmdRet.retval));
         this.setState({
           oldCmdRet: this.state.cmdRet
@@ -251,6 +251,15 @@ export default class PrismaticInterpreter extends Component<Props> {
                   }
                 },
                 shell: {
+                  method: (args, print, runCommand) => {
+                    this.setState({
+                       task: args._[0],
+                       agentid: this.state.session
+                    });
+                    this.emCreateTask(args);
+                  }
+                },
+                task: {
                   method: (args, print, runCommand) => {
                     this.setState({
                        task: args._[0],

