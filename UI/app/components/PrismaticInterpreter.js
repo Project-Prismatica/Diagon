@@ -10,6 +10,7 @@ import SessionTracker from '../utils/SessionTracker';
 import MenuBar from './MenuBar';
 import WindowControls from './WindowControls';
 import SessionTable from './SessionTable';
+import PrismShell from './PrismShell';
 
 const remote = require('electron').remote;
 
@@ -19,7 +20,9 @@ import { getSettings } from '../renderers/settings-control';
 
 type Props = {
   addSession: () => void,
-  sessions: []
+  updateSession: () => void,
+  sessions: [],
+  results: []
 };
 
 export default class PrismaticInterpreter extends Component<Props> {
@@ -36,6 +39,7 @@ export default class PrismaticInterpreter extends Component<Props> {
        task: '',
        cmdRet: '',
        oldCmdRet: '',
+       cmdResponse: [],
        prompt: 'PRISM> ',
        session: '',
        tabs: []
@@ -78,7 +82,8 @@ export default class PrismaticInterpreter extends Component<Props> {
       var dm = this.state.sessionData;
       const {
         sessions,
-        addSession
+        addSession,
+        updateSession
       } = this.props;
 
       if (Object.keys(sessions).length < Object.keys(dm).length) {
@@ -96,6 +101,14 @@ export default class PrismaticInterpreter extends Component<Props> {
             })
           }
         });
+      } else {
+        //Update current sessions
+        Object.keys(dm).map(function(key) {
+          var elapsedtime = Date.now() - dm[key].last
+          updateSession(dm[key].agentid, String(Math.floor(elapsedtime/1000)) + "s")
+        });
+
+
       }
     }, 1000);
   }
@@ -113,7 +126,8 @@ export default class PrismaticInterpreter extends Component<Props> {
   //Emergence Controls
   emCreateTask(task) {
     //Shell tasks and CMD passthrough
-    var cmd = task._.join(" ");
+    //var cmd = task._.join(" ");
+    var cmd = task;
 
     //Get Session ID from localStorage
     var sid = localStorage.getItem("currentSession")
@@ -146,10 +160,13 @@ export default class PrismaticInterpreter extends Component<Props> {
   emTaskResponse() {
     try {
       if (this.state.oldCmdRet._id != this.state.cmdRet._id) {
-        console.log(atob(this.state.cmdRet.retval));
+        //console.log(atob(this.state.cmdRet.retval));
+        //console.log(this.state.cmdRet)
         this.setState({
-          oldCmdRet: this.state.cmdRet
+          oldCmdRet: this.state.cmdRet,
+          cmdResponse: [...this.state.cmdResponse, this.state.cmdRet]
         });
+        //console.log(cmdcont)
       }
     } catch(e) {
       let tmptmp = 0;
@@ -203,90 +220,19 @@ export default class PrismaticInterpreter extends Component<Props> {
         <MenuBar toggleTableView={this.toggleTableView}/>
         { this.state.sessionTable ? <SessionTable sessions={this.props.sessions} /> : null }
 
+
         <div className={styles.container} data-tid="container">
         <div className={styles.termcontainer}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-            width: "100vw"
-          }}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              width: "100vw"
+            }}
           >
-            <Terminal
-             plugins={[
-               {
-                 class: SessionTracker,
-                 config: {
-                   sessions: sessions
-                 }
-               }
-             ]}
-             color='green'
-             value="ttt"
-             onChange={this.handleChange}
-             promptSymbol={this.state.prompt}
-             backgroundColor='black'
-             barColor='black'
-             startState='maximised'
-             style={{ fontWeight: "bold", fontSize: "1em", width: "100%" }}
-             actionHandlers={{
-                handleClose: (toggleClose) => {
-                  // do something on close
-                  toggleClose();
-                },
-                handleMaximise: (toggleMaximise) => {
-                  // do something on maximise
-                  toggleMaximise();
-                }
-             }}
-             commands={{
-                sessions: {
-                  method: (args, print, runCommand) => {
-                    let ret = this.listSessions()
-                    //print(ret)
-
-
-                  }
-                },
-                shell: {
-                  method: (args, print, runCommand) => {
-                    this.setState({
-                       task: args._[0],
-                       agentid: this.state.session
-                    });
-                    this.emCreateTask(args);
-                  }
-                },
-                task: {
-                  method: (args, print, runCommand) => {
-                    this.setState({
-                       task: args._[0],
-                       agentid: this.state.session
-                    });
-                    this.emCreateTask(args);
-                  }
-                },
-                interact: {
-                  method: (args, print, runCommand) => {
-                    this.setState({
-                       prompt: "PROMPT(" + args._[0].toString() + ") > ",
-                       session: args._[0]
-                    });
-                  }
-                }
-             }}
-             descriptions={{
-                'open-google': 'opens google.com',
-                sessions: 'list all active sessions',
-                shell: 'run a shell command on the current session',
-                interact: 'interact with a given session id'
-             }}
-             watchConsoleLogging
-             setPromptPrefix='true'
-             allowTabs="false"
-            />
+            <PrismShell cmdResponse={this.state.cmdResponse} sessions={this.props.sessions} settings={this.state.settings}/>
           </div>
           </div>
         </div>

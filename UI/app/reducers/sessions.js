@@ -2,7 +2,8 @@ import { combineReducers } from 'redux'
 import {
   GET_CURRENT_SESSION,
   GET_SESSION_LIST,
-  ADD_NEW_SESSION
+  ADD_NEW_SESSION,
+  UPDATE_EXISTING_SESSION
 } from '../actions/sessionTracker'
 
 export default function sessions(state = [], action) {
@@ -21,6 +22,17 @@ export default function sessions(state = [], action) {
           dead: false
         }
         ]
+    case UPDATE_EXISTING_SESSION:
+      const {aid, last} = action.payload
+
+      return state.map(sessions => {
+        if (sessions.aid == action.payload.aid) {
+          //console.log(sessions.aid)
+          return {...sessions, last: action.payload.last}
+        };
+        return sessions;
+      });
+
     default:
       return state
   }

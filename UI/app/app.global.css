@@ -7,7 +7,6 @@
 body {
   position: relative;
   height: 100vh;
-  background-color: black;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
 }
@@ -18,9 +17,10 @@ body {
   text-align: center;
   top: 0px;
   padding-top: 10px;
-  min-height: 30px;
+  min-height: 20px;
   font-size: 12px;
   width: 100%;
   background-color: #322f2f;
   -webkit-app-region: drag;
+  z-index: 3000;
 }

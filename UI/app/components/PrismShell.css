@@ -1,0 +1,121 @@
+.terminterface {
+  background-color: #002b36;
+  color: #93a1a1;
+  font-size: 1.25em;
+  font-family: monospace;
+  white-space: normal;
+  overflow: hidden;
+  font-weight: bold;
+  z-index: 900;
+}
+.commandview {
+  font-family: monospace;
+}
+.agentpanel {
+  background-color: #222;
+  height: 100vh;
+  min-width: 260px;
+  float: left;
+  z-index: 920;
+  height: 100vh;
+  overflow: hidden;
+  color: black;
+}
+.agentpanel:hover {
+  overflow-y: scroll;
+}
+.agentpanel::-webkit-scrollbar {
+    width: 6px;
+    background-color: #66667f;
+}
+.agentcontainer {
+  position: relative;
+  text-align: left;
+  padding-top: 85px;
+  padding-left: 0px;
+}
+.agentbox {
+  position: relative;
+  width: 100%;
+  min-height: 100px;
+  background-color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  border-top: 1px solid #322f2f;
+  border-bottom: 1px solid #322f2f;
+}
+.agentbox:hover {
+  background-color: #322f2f;
+  color: #fff;
+}
+.promptcontainer {
+  position: fixed;
+  bottom: 0px;
+  background-color: #073642;
+  color: #657b83;
+  border-top: #66667f 3px solid;
+  text-align: left;
+  height: 45px;
+  width: 100vw;
+  z-index: 2013;
+}
+.terminalcontainer {
+  position: relative;
+  text-align: left;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+  height: 100vh;
+  width: 100vw;
+  z-index: 910;
+}
+.terminalcontainer::-webkit-scrollbar {
+    width: 6px;
+    background-color: #073642;
+}
+.termbox {
+  padding-left: -10px;
+  padding-bottom: 100px;
+  padding-top: 30px;
+}
+.termbox li {
+  list-style-type: none;
+}
+.cmdexec {
+  color: #859900;
+}
+.cmdprompt {
+  color: #268bd2;
+}
+.promptbox {
+  padding-left: 8px;
+  padding-top: 8px;
+  font-size: 26px;
+}
+.prompt {
+  margin-right: 7px;
+}
+.prompt input {
+  color: white;
+}
+.osfont {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 32px;
+}
+.lastb {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.agentdetails {
+  width: 220px;
+  overflow: none;
+  font-family: 'Trebuchet MS';
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.agentname {
+  font-weight: bold;
+}

@@ -1,6 +1,5 @@
 .container {
   position: absolute;
-  top: 37px;
   text-align: center;
 }
 
@@ -21,11 +20,12 @@
 }
 .menucontainer {
   position: absolute;
-  top: 22px;
+  top: 30px;
   height: 45px;
   background-color: #222;
   width: 100vw;
-  z-index: 2012;
+  padding-top: 10px;
+  z-index: 2999;
 }
 .menuitem {
   position: relative;
@@ -53,6 +53,7 @@
 }
 .termcontainer {
   top: -45px;
+  background-color: #002b36;
 }
 .basecontainer {
   position: absolute;
@@ -87,6 +88,7 @@
   margin-right: 2px;
   text-align: left;
   top: 0;
+  z-index: 3001;
 }
 .windowMax,
 .windowMin,
@@ -144,6 +146,7 @@
 }
 .settingsmodal {
   min-width: 600px;
+  z-index: 2015;
 }
 .boxpadding {
   margin-right: 10px;
