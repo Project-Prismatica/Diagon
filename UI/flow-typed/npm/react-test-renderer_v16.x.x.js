@@ -1,4 +1,4 @@
-// flow-typed signature: b6bb53397d83d2d821e258cc73818d1b
+// flow-typed signature: 587d9194db371aeae1c5885133627ec3
 // flow-typed version: 9c71eca8ef/react-test-renderer_v16.x.x/flow_>=v0.47.x
 
 // Type definitions for react-test-renderer 16.x.x

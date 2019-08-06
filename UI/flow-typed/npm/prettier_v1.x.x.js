@@ -1,4 +1,4 @@
-// flow-typed signature: 066c92e9ccb5f0711df8d73cbca837d6
+// flow-typed signature: 3af76cd314eb0e0faf3d2ce1babae4b4
 // flow-typed version: 9e32affdbd/prettier_v1.x.x/flow_>=v0.56.x
 
 declare module "prettier" {

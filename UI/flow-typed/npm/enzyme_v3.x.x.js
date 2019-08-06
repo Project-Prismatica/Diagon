@@ -1,4 +1,4 @@
-// flow-typed signature: f6bad512110ebc6da85b1ddda297fe3d
+// flow-typed signature: 0c7d76e9cf934c96a874f9e93a46bfab
 // flow-typed version: f04d291d8b/enzyme_v3.x.x/flow_>=v0.53.x
 
 declare module "enzyme" {

@@ -1,4 +1,4 @@
-// flow-typed signature: b3f84f1175b4352266867495be456034
+// flow-typed signature: 64a43324c0adfb84516e93ca3b805565
 // flow-typed version: 2b063ece62/react-hot-loader_v4.x.x/flow_>=v0.53.0
 
 // @flow

@@ -20,6 +20,7 @@ export default function payloadGenerator(payload) {
     fs.mkdirSync(arsenal);
     fs.mkdirSync(templates);
 
+
     //Get diagon.py
     var file0 = fs.createWriteStream(path.join(diagondir, 'diagon.py'));
     var request = https.get("https://raw.githubusercontent.com/Project-Prismatica/Diagon/master/diagon.py", function(response) {
@@ -58,11 +59,12 @@ export default function payloadGenerator(payload) {
         command = command + " " + value.cmd[i]
       }
     }
-    command = command + " " + payload.listener
-
+    command = command + " " + payload.listener + " " + payload.profile
+    console.log(command)
     exec(command, (err, stdout, stderr) => {
       if (err) {
         // node couldn't execute the command
+        console.log(err)
         return;
       }
 

@@ -1,4 +1,4 @@
-// flow-typed signature: b872fdc4da6b0c1021c55df6fab87e73
+// flow-typed signature: 54c755c146fdf174807c872448d2b862
 // flow-typed version: f8afc4cfdd/react-redux_v5.x.x/flow_>=v0.68.0 <=v0.84.x
 
 declare module "react-redux" {

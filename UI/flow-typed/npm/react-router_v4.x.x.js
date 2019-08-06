@@ -1,5 +1,5 @@
-// flow-typed signature: e15aeed0d3686f71822b54cde7b71c83
-// flow-typed version: fbf3e77efa/react-router_v4.x.x/flow_>=v0.63.x
+// flow-typed signature: ae0a1ed156c766ce11cd344026038ea5
+// flow-typed version: be05cd918c/react-router_v4.x.x/flow_>=v0.63.x
 
 declare module "react-router" {
   // NOTE: many of these are re-exported by react-router-dom and
@@ -36,8 +36,8 @@ declare module "react-router" {
     goForward(): void,
     canGo?: (n: number) => boolean,
     block(
-      callback: (location: Location, action: HistoryAction) => boolean
-    ): void,
+      callback: string | (location: Location, action: HistoryAction) => ?string
+    ): () => void,
     // createMemoryHistory
     index?: number,
     entries?: Array<Location>

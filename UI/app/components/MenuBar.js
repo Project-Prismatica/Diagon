@@ -38,6 +38,7 @@ export default class MenuBar extends Component<Props> {
       showListeners: false,
       payload: "Gryffindor",
       listener: "",
+      c2profile: "default.profile",
       loader: false,
     };
     this.toggleSettings = this.toggleSettings.bind(this)
@@ -70,7 +71,8 @@ export default class MenuBar extends Component<Props> {
 
     var settings = {
       "name": "Gryffindor",
-      "listener": this.state.listener
+      "listener": this.state.listener,
+      "profile": this.state.c2profile
     }
 
     payloadGenerator(settings);
@@ -208,8 +210,8 @@ export default class MenuBar extends Component<Props> {
                     <Input
                       id="c2Server"
                       name="c2"
-                      defaultValue="coming soon"
-                      onChange={this.handleChange}
+                      defaultValue={this.state.c2profile}
+                      onChange={this.handleChange('c2profile')}
                       inputProps={{
                         'aria-label': 'Description',
                       }}
