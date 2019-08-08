@@ -75,8 +75,9 @@ export default class PrismShell extends Component<Props> {
 
     //If no id user not interacting with session
 
-    fetch('http://' + this.props.settings.emergenceServer + ':29001/api/task', {
+    fetch('http://' + this.props.settings.emergence.server + '/api/task', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -139,7 +140,7 @@ export default class PrismShell extends Component<Props> {
           <div className={styles.terminalcontainer}>
             <div className={styles.termbox}>
               {this.props.cmdResponse.map(function(data, idx) {
-                return <ul key={idx}><li className={styles.cmdprompt}>PRISM ({data.agentid})> {data.aid}<span className={styles.cmdexec}>{data.cmd}</span></li><li><pre>{atob(data.retval)}</pre></li></ul>;
+                return <ul key={idx}><li className={styles.cmdprompt}>PRISM ({data.agentid})> {data.aid}<span className={styles.cmdexec}>{data.cmd}</span></li><li><pre>{data.retval}</pre></li></ul>;
               })}
 
               <div style={{ float:"left", clear: "both" }}

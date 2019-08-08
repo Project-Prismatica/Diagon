@@ -146,8 +146,49 @@
 }
 .settingsmodal {
   min-width: 600px;
+  border-radius: 10px;
   z-index: 2015;
 }
 .boxpadding {
   margin-right: 10px;
+}
+.pagecontent {
+  position: relative;
+  top: 50px;
+  padding: 0px;
+  margin: 0px;
+  height: 100vh;
+  background-color: #333;
+  width: 100vw;
+}
+.centeredUserInput {
+  width: 35em;
+  height: 25em;
+  margin: 0 auto;
+  background-color: #fff;
+}
+
+.centeredUserInput h1 {
+  text-align: center;
+  padding-top: 1em;
+}
+
+.centeredUserInput p {
+  text-align: center;
+}
+
+.centeredUserInput input {
+  display: block;
+  width: 50%;
+  padding: 1em;
+  margin: 1em auto;
+}
+.successicon {
+  color: green;
+}
+.authmodal {
+  position: absolute;
+  top: 20vh;
+  left: 35vw;
+  z-index: 2015;
 }

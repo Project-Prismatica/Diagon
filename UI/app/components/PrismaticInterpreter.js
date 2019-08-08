@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes.json';
 import styles from './Home.css';
+import $ from 'jquery';
 
 import Terminal from 'terminal-in-react';
 import SessionTracker from '../utils/SessionTracker';
@@ -15,7 +16,10 @@ import PrismShell from './PrismShell';
 const remote = require('electron').remote;
 
 import { getSettings } from '../renderers/settings-control';
+import { getSessions } from '../utils/em-diagon';
 
+import EmergenceSetup from './EmergenceSetup';
+import EmergenceCheck from './EmergenceCheck';
 
 
 type Props = {
@@ -48,8 +52,15 @@ export default class PrismaticInterpreter extends Component<Props> {
   }
   componentDidMount() {
     this.interval = setInterval(() => {
-      fetch('http://' + this.state.settings.emergenceServer + ':29001/api/c2', {
+      //UI Checks
+      this.setState({
+        settings: getSettings()
+      })
+
+
+      fetch('http://' + this.state.settings.emergence.server + '/api/c2', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -60,13 +71,15 @@ export default class PrismaticInterpreter extends Component<Props> {
       })
       .then(response => response.json())
       .then(data =>
+        //console.log(data),
         this.setState({cmdRet: data}),
         this.emTaskResponse()
       );
       //Data to Mount
       //Check for new sessions
-      fetch('http://' + this.state.settings.emergenceServer + ':29001/api/sessions', {
+      fetch('http://' + this.state.settings.emergence.server + '/api/sessions', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -79,7 +92,11 @@ export default class PrismaticInterpreter extends Component<Props> {
       .then(data =>
         this.setState({sessionData: data})
       );
+
+
+
       var dm = this.state.sessionData;
+      //console.log(dm)
       const {
         sessions,
         addSession,
@@ -143,8 +160,9 @@ export default class PrismaticInterpreter extends Component<Props> {
     });
     //If no id user not interacting with session
 
-    fetch('http://' + this.state.settings.emergenceServer + ':29001/api/task', {
+    fetch('http://' + this.state.settings.emergence.server + '/api/task', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -160,7 +178,11 @@ export default class PrismaticInterpreter extends Component<Props> {
   emTaskResponse() {
     try {
       if (this.state.oldCmdRet._id != this.state.cmdRet._id) {
-        //console.log(atob(this.state.cmdRet.retval));
+        let tmp = this.state.cmdRet
+        tmp.retval = atob(this.state.cmdRet.retval)
+        this.setState({
+          cmdRet: tmp
+        });
         //console.log(this.state.cmdRet)
         this.setState({
           oldCmdRet: this.state.cmdRet,
@@ -218,6 +240,8 @@ export default class PrismaticInterpreter extends Component<Props> {
 
         <WindowControls />
         <MenuBar toggleTableView={this.toggleTableView}/>
+        {/* typeof this.state.settings.emergence === 'undefined' ? <EmergenceSetup/> : <EmergenceSetup/> <EmergenceCheck settings={this.state.settings}/> */}
+        { typeof this.state.settings.emergence === 'undefined' ? <EmergenceSetup/> : <EmergenceSetup/> }
         { this.state.sessionTable ? <SessionTable sessions={this.props.sessions} /> : null }
 
 

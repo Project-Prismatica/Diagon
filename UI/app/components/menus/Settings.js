@@ -16,7 +16,7 @@ import styles from '../Home.css';
 
 const remote = require('electron').remote;
 
-import updateSettings, { getSettings } from '../../renderers/settings-control';
+import { updateSettings, getSettings } from '../../renderers/settings-control';
 
 export default class Settings extends Component<Props> {
   props: Props;
@@ -40,6 +40,12 @@ export default class Settings extends Component<Props> {
     settings[name] = event.target.value
     this.setState({ settings });
   };
+  handleEmChange = event => {
+    var settings = {...this.state.settings}
+    const name = event.target.name
+    settings.emergence[name] = event.target.value
+    this.setState({ settings });
+  };
 
   render() {
     return (
@@ -60,9 +66,9 @@ export default class Settings extends Component<Props> {
                   <InputLabel htmlFor="eServer">Emergence Server</InputLabel>
                   <Input
                     id="eServer"
-                    name="emergenceServer"
-                    value={ this.state.settings.emergenceServer }
-                    onChange={this.handleChange}
+                    name="server"
+                    value={ this.state.settings.emergence.server }
+                    onChange={this.handleEmChange}
                     inputProps={{
                       'aria-label': 'Description',
                     }}
@@ -76,6 +82,20 @@ export default class Settings extends Component<Props> {
                     id="c2Server"
                     name="c2"
                     defaultValue={ this.state.settings.c2 }
+                    onChange={this.handleChange}
+                    inputProps={{
+                      'aria-label': 'Description',
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl>
+                  <InputLabel htmlFor="eServerKey">Emergence Server Key</InputLabel>
+                  <Input
+                    id="eServer"
+                    name="emergenceServerKey"
+                    value={ this.state.settings.emergenceServerKey }
                     onChange={this.handleChange}
                     inputProps={{
                       'aria-label': 'Description',

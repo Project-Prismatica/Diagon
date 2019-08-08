@@ -32,7 +32,7 @@ export default class Listeners extends Component<Props> {
   }
   startListener() {
     console.log("[+] Starting Oculus Listener")
-    fetch('http://' + this.state.settings.emergenceServer + ':29000/api/update', {
+    fetch('http://' + this.state.settings.c2 + ':29000/api/update', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
