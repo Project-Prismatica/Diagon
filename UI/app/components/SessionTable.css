@@ -9,3 +9,10 @@
 .osfont {
   font-size: 32px;
 }
+.dlbtn {
+  float: right;
+  cursor: pointer;
+}
+.dlbtn:hover {
+  color: green;
+}

@@ -39,6 +39,8 @@ export default class PrismShell extends Component<Props> {
       command: "",
       page: 0,
       rowsPerPage: 5,
+      prism_history: [],
+      historyPtr: 0,
     }
     this.keyPress = this.keyPress.bind(this);
     this.emCreateTask = this.emCreateTask.bind(this);
@@ -59,11 +61,33 @@ export default class PrismShell extends Component<Props> {
     }
 
     if(e.keyCode == 13) {
-      console.log('value', e.target.value);
-      this.setState({ command: "" });
+      console.log(e.target.value);
+      var shellhistory = this.state.prism_history
+      shellhistory.push(e.target.value)
+      this.setState({
+        command: "",
+        historyPtr: this.state.historyPtr+1,
+        prism_history: shellhistory
+      });
       // Send command
       this.emCreateTask(e.target.value)
 
+    } else if (e.keyCode == 38) {
+      this.setState({
+        command: this.state.prism_history[this.state.historyPtr-1],
+        historyPtr: this.state.historyPtr-1,
+      });
+    } else if (e.keyCode == 40) {
+      if (this.state.historyPtr < this.state.prism_history.length) {
+        this.setState({
+          command: this.state.prism_history[this.state.historyPtr+1],
+          historyPtr: this.state.historyPtr+1,
+        });
+      } else {
+        this.setState({
+          command: "",
+        });
+      }
     }
   }
   //Emergence Controls

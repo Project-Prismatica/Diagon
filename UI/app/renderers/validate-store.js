@@ -2,13 +2,12 @@ const { ipcRenderer, remote } = require('electron');
 const { exec } = require('child_process');
 var fs = require('fs');
 var path = require('path');
-const https = require('https');
+
 const homedir = require('os').homedir();
 var prismdir = path.join(homedir, '.prismatica')
 var diagondir = path.join(prismdir, 'Diagon')
 
-export default function payloadGenerator(payload) {
-
+export default function validateStore() {
   if (!fs.existsSync(prismdir)) {
     fs.mkdirSync(prismdir);
     fs.writeFile(settingsconf, '{"homedir": "' + homdir + ' "}');
@@ -40,38 +39,4 @@ export default function payloadGenerator(payload) {
     });
 
     }
-
-  //Get payload build conf
-  fs.readFile(path.join(diagondir, 'Arsenal', 'gryffindor.json'), 'utf8', function(err, contents) {
-  //Exec all build commands
-  Object.entries(JSON.parse(contents).buildcmds).forEach(entry => {
-    let key = entry[0];
-    let value = entry[1];
-    var command = ""
-    for (var i = 0; i < value.cmd.length; i++) {
-      if (value.cmd[i] == "path") {
-        i++
-        var filepath = path.join(diagondir, value.cmd[i])
-        command = command + ' "' + filepath + '"'
-      } else if (i == 0) {
-        command = value.cmd[i]
-      } else {
-        command = command + " " + value.cmd[i]
-      }
-    }
-    command = command + " " + payload.listener + " " + payload.profile
-    console.log(command)
-    exec(command, (err, stdout, stderr) => {
-      if (err) {
-        // node couldn't execute the command
-        console.log(err)
-        return;
-      }
-
-      // the *entire* stdout and stderr (buffered)
-      console.log(`${stdout}`);
-      console.log(`${stderr}`);
-    });
-  });
-  });
 }

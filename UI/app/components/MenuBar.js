@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faIndustry, faTerminal, faScroll, faBars, faBug, faKey, faServer, faRadiation, faHeadphones, faTable } from '@fortawesome/free-solid-svg-icons';
+import { faWallet, faIndustry, faTerminal, faScroll, faBars, faBug, faKey, faServer, faRadiation, faHeadphones, faTable } from '@fortawesome/free-solid-svg-icons';
 import ReactTooltip from 'react-tooltip';
 import Modal from 'react-responsive-modal';
 
@@ -136,7 +136,10 @@ export default class MenuBar extends Component<Props> {
             <FontAwesomeIcon data-tip="Attacks (Coming Soon)" icon={faRadiation} />
           </div>
           <div className={styles.menuitem}>
-            <FontAwesomeIcon data-tip="Loot (Coming Soon)" icon={faServer} />
+            <FontAwesomeIcon data-tip="Loot" onClick={this.props.toggleLootView} icon={faWallet} />
+          </div>
+          <div className={styles.menuitem}>
+            <FontAwesomeIcon data-tip="Infrastructure (Coming Soon)" icon={faServer} />
           </div>
           <div className={styles.menuitem}>
             <FontAwesomeIcon data-tip="Credentials (Coming Soon)" icon={faKey} />

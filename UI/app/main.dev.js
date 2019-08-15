@@ -10,9 +10,10 @@
  *
  * @flow
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
 const path = require('path');
+const {download} = require('electron-dl');
 
 let mainWindow = null;
 

@@ -11,6 +11,7 @@ import SessionTracker from '../utils/SessionTracker';
 import MenuBar from './MenuBar';
 import WindowControls from './WindowControls';
 import SessionTable from './SessionTable';
+import LootTable from './LootTable';
 import PrismShell from './PrismShell';
 
 const remote = require('electron').remote;
@@ -38,6 +39,7 @@ export default class PrismaticInterpreter extends Component<Props> {
     this.state = {
        hideCompleted: false,
        sessionTable: false,
+       lootView: false,
        settings: getSettings(),
        agentid: '',
        task: '',
@@ -46,9 +48,12 @@ export default class PrismaticInterpreter extends Component<Props> {
        cmdResponse: [],
        prompt: 'PRISM> ',
        session: '',
-       tabs: []
+       loot: [],
+       tabs: [],
     };
     this.toggleTableView = this.toggleTableView.bind(this)
+    this.toggleLootView = this.toggleLootView.bind(this)
+
   }
   componentDidMount() {
     this.interval = setInterval(() => {
@@ -126,6 +131,24 @@ export default class PrismaticInterpreter extends Component<Props> {
         });
 
 
+        //Check for new loot
+        fetch('http://' + this.state.settings.emergence.server + '/api/loot', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            collection: "LOOT"
+          })
+        })
+        .then(response => response.json())
+        .then(data =>
+          this.setState({loot: data})
+        );
+
+
       }
     }, 1000);
   }
@@ -138,6 +161,15 @@ export default class PrismaticInterpreter extends Component<Props> {
       this.setState({ sessionTable: false });
     } else {
       this.setState({ sessionTable: true });
+    }
+  }
+  toggleLootView() {
+    console.log("test")
+    console.log(this.state.lootView)
+    if (this.state.lootView == true) {
+      this.setState({ lootView: false });
+    } else {
+      this.setState({ lootView: true });
     }
   }
   //Emergence Controls
@@ -239,10 +271,13 @@ export default class PrismaticInterpreter extends Component<Props> {
       <div className={styles.basecontainer}>
 
         <WindowControls />
-        <MenuBar toggleTableView={this.toggleTableView}/>
+        <MenuBar toggleTableView={this.toggleTableView} toggleLootView={this.toggleLootView}/>
         {/* typeof this.state.settings.emergence === 'undefined' ? <EmergenceSetup/> : <EmergenceSetup/> <EmergenceCheck settings={this.state.settings}/> */}
-        { typeof this.state.settings.emergence === 'undefined' ? <EmergenceSetup/> : <EmergenceSetup/> }
+        { typeof this.state.settings.emergence === 'undefined' ? <EmergenceSetup/> : <EmergenceCheck settings={this.state.settings}/> }
+
+
         { this.state.sessionTable ? <SessionTable sessions={this.props.sessions} /> : null }
+        { this.state.lootView ? <LootTable loot={this.state.loot} settings={this.state.settings} /> : null }
 
 
         <div className={styles.container} data-tid="container">

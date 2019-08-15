@@ -7,6 +7,7 @@ import Loader from 'react-loader-spinner';
 
 import { checkCommunications, login, checkSession } from '../utils/emergence';
 import { updateSettings } from '../renderers/settings-control';
+import emcInstall from '../renderers/auto-install';
 import EmergenceMain from './EmergenceMain';
 import styles from './Home.css';
 import { red } from '@material-ui/core/colors';
@@ -31,7 +32,7 @@ export default class EmergenceSetup extends React.Component<Props> {
       port: '29001',
       username: 'admin',
       password: '',
-      open: false,
+      open: true,
       installing: false
     };
     if (this.state.sessionValid == false) {
@@ -67,6 +68,7 @@ export default class EmergenceSetup extends React.Component<Props> {
     sleep(5000).then(() => {
       this.setState({installing: false});
     })
+    emcInstall();
 
   }
 
