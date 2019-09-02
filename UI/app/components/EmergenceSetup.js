@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import Modal from 'react-responsive-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import Loader from 'react-loader-spinner';
 
 import { checkCommunications, login, checkSession } from '../utils/emergence';
 import { updateSettings } from '../renderers/settings-control';
@@ -157,13 +156,7 @@ export default class EmergenceSetup extends React.Component<Props> {
                 <h1>Installing Prismatic Components</h1>
 
                 <div id="loaderBox" />
-                <Loader
-                  className="loader"
-                  type="Grid"
-                  color="#414a9c"
-                  height="100"
-                  width="100"
-                />
+
 
 
                 <p><span className={styles.successicon}><FontAwesomeIcon data-tip="Table View" onClick={this.props.toggleTableView} icon={faCheckCircle} /></span> Emergence Fabric API</p>

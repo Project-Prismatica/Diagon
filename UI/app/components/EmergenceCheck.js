@@ -4,7 +4,6 @@ import Modal from 'react-responsive-modal';
 
 import { checkCommunications, login, checkSession } from '../utils/emergence';
 import { updateSettings } from '../renderers/settings-control';
-import Loader from 'react-loader-spinner';
 import EmergenceMain from './EmergenceMain';
 import styles from './Home.css';
 
