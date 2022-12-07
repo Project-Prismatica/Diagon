@@ -231,7 +231,7 @@
     "react-tooltip": "^3.9.2",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
-    "simple-git": "^1.110.0",
+    "simple-git": "^3.15.0",
     "source-map-support": "^0.5.6",
     "terminal-in-react": "^4.3.0",
     "terminal-in-react-node-eval-plugin": "^2.0.0",
